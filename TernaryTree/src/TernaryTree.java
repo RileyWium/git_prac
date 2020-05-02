@@ -21,7 +21,7 @@ precedes cod, cob is represented as a left child extending from cod.
 
 Implement insertion and search functions for a ternary search tree.
 
-time: 
+time: 2:46
 easy
  */
 
@@ -32,9 +32,10 @@ public class TernaryTree {
 	public static void main(String[] args) {
 		//not tested for uppercase or for the universal character set
 		TernaryTreeNode head = new TernaryTreeNode();
+		head.fillTree();
 		
 		TernaryTree tT = new TernaryTree();
-		
+				
 		String[] insertStrings = {"code","cob","be","ax","war","we"};
 		tT.TTInsertAll(insertStrings, head);
 		
@@ -42,7 +43,7 @@ public class TernaryTree {
 		boolean output2 = tT.TTSearch(head, "be" ,0);
 		boolean output3 = tT.TTSearch(head, "lol" ,0);
 		boolean output4 = tT.TTSearch(head, "cob" ,0);
-		boolean output5 = tT.TTSearch(head, "code " ,0);
+		boolean output5 = tT.TTSearch(head, "code " ,0);//space added
 		boolean output6 = tT.TTSearch(head, "war" ,0);
 		
 		System.out.println("out1: "+output1+", out2: "+output2+", out3: "+output3+", out4: "+output4+
@@ -62,34 +63,31 @@ public class TernaryTree {
 		//at which point move on with leftchild don't increment readCnt. same with rightchild
 		System.out.println(inputStr.charAt(readCnt));
 		TernaryTreeNode newLeaf = new TernaryTreeNode();
+		newLeaf.fillTree();
 		if(mainTree.nodeVal == '\u0000') {
 			System.out.println("null found");
 			mainTree.nodeVal = inputStr.charAt(readCnt);
 			mainTree.midChild = newLeaf;
-			TTInsert(inputStr,mainTree.midChild,readCnt+1);
-			
-		} else if(mainTree.nodeVal == inputStr.charAt(readCnt)) {
-			TTInsert(inputStr,mainTree.midChild,readCnt+1);
-			
-		} else if(mainTree.nodeVal > inputStr.charAt(readCnt)) {
-			if(mainTree.midChild == null) {
-				TTInsert(inputStr,mainTree.midChild,readCnt+1);
+			TTInsert(inputStr,mainTree.midChild,readCnt+1);	
+		}else if( mainTree.nodeVal == inputStr.charAt(readCnt)){
+			if(mainTree.midChild.nodeVal == '\u0000') {
+				mainTree.midChild = newLeaf;
 			}
-			else if(mainTree.leftChild == null) {
+			TTInsert(inputStr,mainTree.midChild,readCnt+1);	
+		
+		} else if(mainTree.nodeVal > inputStr.charAt(readCnt)) {//left			
+			if(mainTree.leftChild.nodeVal == '\u0000') {
 				newLeaf.nodeVal = inputStr.charAt(readCnt);
 				mainTree.leftChild = newLeaf;
-				TTInsert(inputStr,mainTree.leftChild,readCnt+1);
+				TTInsert(inputStr,mainTree.leftChild,readCnt);
 			}else {
 				TTInsert(inputStr,mainTree.leftChild,readCnt);
 			}
-		}else if(mainTree.nodeVal < inputStr.charAt(readCnt)){
-			if(mainTree.midChild == null) {
-				TTInsert(inputStr,mainTree.midChild,readCnt+1);
-			}
-			else if(mainTree.rightChild == null) {
+		}else if(mainTree.nodeVal < inputStr.charAt(readCnt)){//right
+			if(mainTree.rightChild.nodeVal == '\u0000') {
 				newLeaf.nodeVal = inputStr.charAt(readCnt);
 				mainTree.rightChild = newLeaf;
-				TTInsert(inputStr,mainTree.rightChild,readCnt+1);
+				TTInsert(inputStr,mainTree.rightChild,readCnt);
 			}else {
 				TTInsert(inputStr,mainTree.rightChild,readCnt);
 			}
@@ -100,6 +98,9 @@ public class TernaryTree {
 		//returns true if term in tree otherwise false
 		if(readCnt == searchStr.length()) {
 			return true;
+		}
+		if(mainTree.nodeVal == '\u0000') {
+			return false;
 		}
 		boolean output = false;
 		if(mainTree.nodeVal == searchStr.charAt(readCnt)) {
@@ -118,6 +119,12 @@ public class TernaryTree {
 		public TernaryTreeNode leftChild;
 		public TernaryTreeNode midChild;
 		public TernaryTreeNode rightChild;
+		
+		public void fillTree() {
+			leftChild = new TernaryTreeNode();
+			midChild = new TernaryTreeNode();
+			rightChild = new TernaryTreeNode();
+		}
 	}
 }
 
